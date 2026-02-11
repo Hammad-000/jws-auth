@@ -21,7 +21,7 @@ export const register = async (req, res) => {
     },
     SECRET_KEY,
     {
-      expiresIn: "24hr",
+      expiresIn: "24h",
     },
   );
 
@@ -46,7 +46,7 @@ export const login = async (req, res) => {
       },
       SECRET_KEY,
       {
-        expiresIn: "24hr",
+        expiresIn: "24h",
       },
     );
 

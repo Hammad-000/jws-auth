@@ -16,9 +16,11 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+app.use(authMiddleware);
+
 
 app.get("/", (req, res) => {
-  res.send("runnig");
+  res.send("runnimg");
 });
 
 app.use("/api", router);

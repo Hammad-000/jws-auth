@@ -18,7 +18,7 @@ export const authMiddleware = async (req, res, next) => {
   const user = await userModel.findById(jwtData?.userId);
 
   if (!user) {
-    res.status(402).send("Unauthorize user!");
+    res.status(401).send("Unauthorize user!");
   }
 
   next();
