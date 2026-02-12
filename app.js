@@ -8,28 +8,20 @@ const app = express();
 
 app.use(express.json());
 
-mongoose
-  .connect("mongodb://127.0.0.1:27017/food")
-  .then(() => {
-    console.log("DB connected");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
+mongoose.connect("mongodb://127.0.0.1:27017/food")
+  .then(() => console.log("DB connected"))
+  .catch((err) => console.log(err));
 
 app.get("/", (req, res) => {
-  res.send("runnimg");
+  res.send("running");
 });
 
 app.use("/api", router);
 
-
-app.use(authMiddleware);
-app.get("/api/products", async (req, res) => {
-  res.send("Products");
+app.get("/api/products", authMiddleware, (req, res) => {
+  res.send("Products - Protected");
 });
 
 app.listen(port, () => {
-  console.log(`Server listing on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });

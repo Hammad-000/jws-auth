@@ -1,24 +1,27 @@
+import jwt from "jsonwebtoken";
+import userModel from "../models/userModel.js";
+
 export const authMiddleware = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
 
-    if (!authorization || !authorization.startsWith("Bearer")) {
-      return res.status(401).send("Unauthorized access");
+    if (!authorization || !authorization.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Unauthorized access" });
     }
 
     const token = authorization.split(" ")[1];
 
-    const jwtData = jwt.verify(token, SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
-    const user = await userModel.findById(jwtData.userId);
+    const user = await userModel.findById(decoded.userId).select("-password");
     if (!user) {
-      return res.status(401).send("Unauthorized user!");
+      return res.status(401).json({ message: "User not found" });
     }
 
-    req.userId = user._id;
+    req.user = user;
 
     next();
   } catch (error) {
-    return res.status(401).send("Invalid or expired token");
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
