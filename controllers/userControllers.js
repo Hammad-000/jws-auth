@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
-export const SECRET_KEY = "supersecret123";
+ export const SECRET_KEY = "supersecret123";
 
 export const register = async (req, res) => {
   const { name, email, password } = req.body || {};
@@ -31,7 +31,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body || {};
 
-  const user = await User.find({ email });
+  const user = await User.findOne({ email });
 
   if (!user) {
     return res.status(400).send("User not found!");
@@ -39,19 +39,15 @@ export const login = async (req, res) => {
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
-  if (passwordMatch) {
-    const token = jwt.sign(
-      {
-        userId: user._id,
-      },
-      SECRET_KEY,
-      {
-        expiresIn: "24h",
-      },
-    );
-
-    res.json({ token });
-  } else {
-    res.status(400).json({ message: "Password not match!" });
+  if (!passwordMatch) {
+    return res.status(400).json({ message: "Password not match!" });
   }
+
+  const token = jwt.sign(
+    { userId: user._id },
+    SECRET_KEY,
+    { expiresIn: "24h" }
+  );
+
+  res.json({ token });
 };

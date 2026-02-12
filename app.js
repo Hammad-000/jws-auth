@@ -16,7 +16,6 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-app.use(authMiddleware);
 
 
 app.get("/", (req, res) => {
