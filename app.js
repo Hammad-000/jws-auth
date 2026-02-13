@@ -1,27 +1,24 @@
 import express from "express";
+import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { router } from "./routes/userRoutes.js";
-import { authMiddleware } from "./middleware/authMiddleware.js";
+import authRoutes from "./routes/authRoutes.js";
 
-const port = 3000;
+dotenv.config();
+
 const app = express();
-
 app.use(express.json());
 
+// Connect to MongoDB
 mongoose.connect("mongodb://127.0.0.1:27017/food")
   .then(() => console.log("DB connected"))
   .catch((err) => console.log(err));
 
-app.get("/", (req, res) => {
-  res.send("running");
-});
+// Routes
+app.use("/api/auth", authRoutes);
 
-app.use("/api", router);
+// Test root route
+app.get("/", (req, res) => res.send("Server running"));
 
-app.get("/api/products", authMiddleware, (req, res) => {
-  res.send("Products - Protected");
-});
-
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
