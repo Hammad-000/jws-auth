@@ -1,16 +1,6 @@
-import Product from "../models/productModel.js"; 
+import Product from "../models/productModel.js";
 
-import jwt from "jsonwebtoken";
-
-const token = jwt.sign(
-  { userId: user._id, role: user.role },
-  process.env.JWT_SECRET,
-  { expiresIn: "24h" }
-);
-
-
-
-const getAllProducts = async (req , res) => {
+const getAllProducts = async (req, res) => {
 
     try {
         const products = await Product.find();
@@ -20,73 +10,53 @@ const getAllProducts = async (req , res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server Error" 
+            message: "Server Error"
         });
-    }
+    }}
 
-}
-
-
-
-const getProductById = async (req , res) => {
-
+const getProductById = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
-
         if (!product) {
-            return res.status(404).json({ 
-                message: "Product not found" 
-            });
-        }
-
+            return res.status(404).json({
+                message: "Product not found !"
+            });  }
         res.status(200).json({
-            message: 'Admin Get Product By Id Successfully!',
+            message: 'Admin Gets Product By Id !',
             product
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server Error" 
+            message: "Server Error"
         });
     }
-
 }
 
 
-const createProduct = async (req , res) => {
-
+const createProduct = async (req, res) => {
     try {
-        const { name, description, price, category } = req.body;
-
+        const { name, description, price, category, isAvailable  } = req.body;
         const product = await Product.create({
-            name,
-            description,
-            price,
-            category,
+            name,description, price,category, isAvailable
         })
-
         res.status(201).json({
-            message: "Product created successfully!",
+            message: "Product created successfully !",
             product,
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server Error" 
+            message: "Server Error"
         });
     }
-
 }
 
-
-
-const updateProductById = async (req , res) => {
-    
+const updateProductById = async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true }
         )
-
         if (!product) {
             return res.status(404).json({
                 message: "Product not found"
@@ -99,16 +69,13 @@ const updateProductById = async (req , res) => {
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server Error" 
+            message: "Server Error"
         });
     }
 
 }
 
-
-
-const deleteProductById = async (req , res) => {
-    
+const deleteProductById = async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id)
 
@@ -119,22 +86,17 @@ const deleteProductById = async (req , res) => {
         }
 
         res.status(200).json({
-            message: "Product deleted successfully!",
+            message: "Product deleted successfully !",
             product,
         });
     } catch (error) {
         res.status(500).json({
-            message: "Server Error" 
+            message: "Server  Error"
         });
     }
 
 }
 
 export {
-    getProductById,
-    createProduct,
-    updateProductById,
-    deleteProductById,
-    getAllProducts ,
-
-};
+ getProductById,createProduct, updateProductById, deleteProductById,getAllProducts,
+ };

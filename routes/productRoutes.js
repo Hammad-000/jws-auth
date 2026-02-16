@@ -1,6 +1,5 @@
 import express from "express";
 import { authMiddleware, authorize } from "../middleware/authMiddleware.js";
-
 import { 
     createProduct, 
     getAllProducts, 
@@ -11,13 +10,13 @@ import {
 
 const router = express.Router();
 
-// Public route: get all products
-router.get("/", getAllProducts);
+router.route("/")
+  .get(getAllProducts)
+  .post(authMiddleware, authorize("admin"), createProduct);
 
-// Admin only routes
-router.post("/", authMiddleware, authorize("admin"), createProduct);
-router.put("/:id", authMiddleware, authorize("admin"), updateProductById);
-router.delete("/:id", authMiddleware, authorize("admin"), deleteProductById);
-router.get("/:id", authMiddleware, authorize("admin"), getProductById);
+router.route("/:id")
+  .get(getProductById)
+  .put(authMiddleware, authorize("admin"), updateProductById)
+  .delete(authMiddleware, authorize("admin"), deleteProductById);
 
 export default router;
