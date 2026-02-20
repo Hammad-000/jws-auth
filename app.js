@@ -16,7 +16,10 @@ mongoose.connect("mongodb://127.0.0.1:27017/food")
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
-
+app.use("/uploads", express.static("uploads"));
+app.get("/uploads", (req, res) => {
+  res.send("Upload route working");
+});
 
 app.get("/", (req, res) => res.send("Server running"));
 
